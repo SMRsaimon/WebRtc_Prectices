@@ -38,3 +38,11 @@ const videoCalling = async () => {
 //     console.log(stream)
 
 //    })
+
+// check media devices 
+
+navigator.mediaDevices.enumerateDevices()
+.then(device=>{
+
+     console.log(device)
+})
