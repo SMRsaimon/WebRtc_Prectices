@@ -1,0 +1,80 @@
+<html lang="en">
+
+<head>
+    <title>Salif</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+<body>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <p id="selfPeerID">Self Peer ID(Salif):</p>
+            <p class="text-primary" id="connectionStatus">Connection Status:</p>
+            <input id="PartnerPeerID" type="text" placeholder="Partner Peer ID" class="form-control"><br/>
+            <button id="connectBtn" class="btn btn-primary">Connect</button><br/>
+        </div>
+    </div>
+</div>
+
+
+<div class="container mt-5 p-5 bg-light">
+    <div class="row">
+        <div class="col-md-6">
+            <h5>Message From Rabbil:<span id="receivedMsg"></span></h5><br/>
+            <input id="msg" type="text" placeholder="Message" class="form-control"><br/>
+            <button id="sendBtn" class="btn btn-primary">Send to Rabbil</button><br/>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/peerjs.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+    let peer=new Peer();
+    peer.on('open',function (PeerID) {
+        $('#selfPeerID').html("Self Peer ID(Salif): "+PeerID)
+    })
+
+
+    $('#connectBtn').on('click',function () {
+        let PartnerPeerID= $('#PartnerPeerID').val();
+        let conn=peer.connect(PartnerPeerID);
+        conn.on('open',function () {
+            $('#connectionStatus').html("Connection Status: YES");
+            ReceivedMessage()
+        })
+    })
+
+
+    // Received Message From Rabbil
+    function ReceivedMessage() {
+        peer.on('connection',function (conn) {
+            conn.on('data',function (msg) {
+                $('#receivedMsg').html(msg)
+            })
+        })
+    }
+
+
+
+    // Send Message From Rabbil
+    $('#sendBtn').on('click',function () {
+        let msg=$('#msg').val();
+        let PartnerPeerID= $('#PartnerPeerID').val();
+        let conn=peer.connect(PartnerPeerID);
+        conn.on('open',function () {
+            conn.send(msg)
+        })
+    })
+
+
+</script>
+</body>
+</html>
